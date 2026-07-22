@@ -1,4 +1,13 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 2026-07-22
+  Bugfixes:
+    - Fixed missing Alt-mode module icons on beacons by dynamically generating explicit module category lists instead of wiping them.
+    - Removed legacy art_style and requires_beacon_alt_mode overrides that broke custom module rendering and beacon UI visuals.
+  Changes:
+    - Cleaned up non-existent allowed_module_categories field handling on recipe prototypes.
+
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 2026-07-22
   Major Features:

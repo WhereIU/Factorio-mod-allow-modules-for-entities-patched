@@ -3,12 +3,21 @@
 -- =========================================================
 local allow_all_categories = settings.startup["amfe2-allow-all-cat"].value
 local everywhere_categories = {}
+local known_categories = {}
 local split_pattern = "[^%s,]+"
 
-if not allow_all_categories then
+if allow_all_categories then
+  if data.raw["module-category"] then
+    for cat_name, _ in pairs(data.raw["module-category"]) do
+      table.insert(everywhere_categories, cat_name)
+      known_categories[cat_name] = true
+    end
+  end
+else
   local setting_cat_value = settings.startup["amfe2-allow-cat"].value or ""
   for setcat in setting_cat_value:gmatch(split_pattern) do
     table.insert(everywhere_categories, setcat)
+    known_categories[setcat] = true
   end
 end
 
@@ -33,8 +42,10 @@ if data.raw.module then
       end
     end
 
-    module.art_style = module.art_style or "vanilla"
-    module.requires_beacon_alt_mode = false
+    if module.category and not known_categories[module.category] then
+      known_categories[module.category] = true
+      table.insert(everywhere_categories, module.category)
+    end
 
     if not module.beacon_tint and module.category then
       module.beacon_tint = default_tints[module.category] or default_tints.speed
@@ -77,12 +88,12 @@ if settings.startup["amfe2-allow-entity"].value then
             entity.effect_receiver.uses_surface_effects = true
           end
 
-          if allow_all_categories then
-            entity.allowed_module_categories = nil
-          else
+          if #everywhere_categories > 0 then
             entity.allowed_module_categories = entity.allowed_module_categories or {}
             local existing = {}
-            for _, cat in ipairs(entity.allowed_module_categories) do existing[cat] = true end
+            for _, cat in ipairs(entity.allowed_module_categories) do 
+              existing[cat] = true 
+            end
             for _, category in ipairs(everywhere_categories) do
               if not existing[category] then
                 table.insert(entity.allowed_module_categories, category)
@@ -119,7 +130,6 @@ if data.raw.recipe then
       recipe.allow_productivity = true
       recipe.allow_pollution = true
       recipe.allow_quality = true
-      recipe.allowed_module_categories = nil
     end
 
     if max_prod > 0 and recipe.allow_productivity then
