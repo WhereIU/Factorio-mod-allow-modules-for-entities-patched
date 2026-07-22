@@ -1,0 +1,10 @@
+---------------------------------------------------------------------------------------------------
+Version: 1.0.0
+Date: 2026-07-22
+  Major Features:
+    - Initial release of Patched Compatibility version for Factorio 2.0 and Space Age.
+  Changes:
+    - Updated entity effect handling to use effect_receiver for 2.0 API compatibility.
+    - Preserved built-in productivity bonuses on mod buildings like dlc (e.g. foundry, electromagnetic plant).
+    - Unified recipe and productivity limits into a single-pass processing loop.
+    - Cleaned up settings and added toggle for unlocking all module categories.
